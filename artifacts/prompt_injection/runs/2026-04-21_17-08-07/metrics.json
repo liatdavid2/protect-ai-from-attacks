@@ -2,6 +2,7 @@
   "dataset_name": "neuralchemy/Prompt-injection-dataset",
   "dataset_config": "core",
   "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "cache_path": "C:\\Users\\liat\\Documents\\work\\secure-slm-gateway\\artifacts\\prompt_injection\\cache\\embeddings_core_sentence-transformers_all-MiniLM-L6-v2.npz",
   "validation": {
     "accuracy": 0.9521785334750266,
     "f1_macro": 0.9510960513049714,
