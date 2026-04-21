@@ -1,1 +1,1 @@
-# secure-slm-gateway
+# protect-ai-from-attacks
