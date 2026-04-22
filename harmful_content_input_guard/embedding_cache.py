@@ -3,7 +3,7 @@ from typing import Tuple
 
 import numpy as np
 
-from harmful_content.run_paths import CACHE_DIR
+from harmful_content_input_guard.run_paths import CACHE_DIR
 
 
 def _safe_model_name(model_name: str) -> str:

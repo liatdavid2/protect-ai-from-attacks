@@ -10,10 +10,10 @@ from pydantic import BaseModel, Field
 
 load_dotenv()
 
-from harmful_content.config import EMBEDDING_MODEL_NAME as HARMFUL_EMBEDDING_MODEL_NAME
-from harmful_content.features import EmbeddingEncoder as HarmfulEmbeddingEncoder
-from harmful_content.latest_run import get_latest_run_dir as get_latest_harmful_run_dir
-from harmful_content.model import load_model as load_harmful_model
+from harmful_content_input_guard.config import EMBEDDING_MODEL_NAME as HARMFUL_EMBEDDING_MODEL_NAME
+from harmful_content_input_guard.features import EmbeddingEncoder as HarmfulEmbeddingEncoder
+from harmful_content_input_guard.latest_run import get_latest_run_dir as get_latest_harmful_run_dir
+from harmful_content_input_guard.model import load_model as load_harmful_model
 from prompt_injection.config import EMBEDDING_MODEL_NAME as PROMPT_EMBEDDING_MODEL_NAME
 from prompt_injection.features import EmbeddingEncoder as PromptEmbeddingEncoder
 from prompt_injection.latest_run import get_latest_run_dir as get_latest_prompt_run_dir

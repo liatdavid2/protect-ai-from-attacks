@@ -1,7 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 
-from harmful_content.config import ARTIFACTS_DIR
+from harmful_content_input_guard.config import ARTIFACTS_DIR
 
 CACHE_DIR = ARTIFACTS_DIR / "cache"
 RUNS_DIR = ARTIFACTS_DIR / "runs"

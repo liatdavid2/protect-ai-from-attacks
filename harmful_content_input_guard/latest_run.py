@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from harmful_content.run_paths import RUNS_DIR
+from harmful_content_input_guard.run_paths import RUNS_DIR
 
 
 def get_latest_run_dir() -> Path:

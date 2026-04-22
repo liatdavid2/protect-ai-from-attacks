@@ -7,12 +7,12 @@ PROJECT_ROOT = os.path.dirname(CURRENT_DIR)
 if PROJECT_ROOT not in sys.path:
     sys.path.append(PROJECT_ROOT)
 
-from harmful_content.config import DATASET_NAME, EMBEDDING_MODEL_NAME
-from harmful_content.data import build_label_map, load_splits
-from harmful_content.embedding_cache import get_cache_path, load_embeddings_cache, save_embeddings_cache
-from harmful_content.features import EmbeddingEncoder
-from harmful_content.model import build_model, evaluate_model, save_model
-from harmful_content.run_paths import create_run_dir
+from harmful_content_input_guard.config import DATASET_NAME, EMBEDDING_MODEL_NAME
+from harmful_content_input_guard.data import build_label_map, load_splits
+from harmful_content_input_guard.embedding_cache import get_cache_path, load_embeddings_cache, save_embeddings_cache
+from harmful_content_input_guard.features import EmbeddingEncoder
+from harmful_content_input_guard.model import build_model, evaluate_model, save_model
+from harmful_content_input_guard.run_paths import create_run_dir
 
 
 def main():

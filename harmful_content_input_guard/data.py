@@ -3,7 +3,7 @@ import os
 from datasets import load_dataset
 from dotenv import load_dotenv
 
-from harmful_content.config import DATASET_NAME
+from harmful_content_input_guard.config import DATASET_NAME
 
 load_dotenv()
 

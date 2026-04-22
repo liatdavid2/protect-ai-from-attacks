@@ -1,7 +1,7 @@
 {
   "dataset_name": "nvidia/Aegis-AI-Content-Safety-Dataset-2.0",
   "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
-  "cache_path": "C:\\Users\\liat\\Documents\\work\\secure-slm-gateway\\artifacts\\harmful_content\\cache\\embeddings_sentence-transformers_all-MiniLM-L6-v2.npz",
+  "cache_path": "C:\\Users\\liat\\Documents\\work\\secure-slm-gateway\\artifacts\\harmful_content_input_guard\\cache\\embeddings_sentence-transformers_all-MiniLM-L6-v2.npz",
   "validation": {
     "accuracy": 0.8304498269896193,
     "f1_macro": 0.8229185267661754,
