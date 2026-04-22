@@ -37,7 +37,7 @@ from system_prompt_leakage_output_guard.model import (
     load_model as load_system_prompt_leakage_model,
 )
 
-APP_TITLE = "Secure SLM Gateway"
+APP_TITLE = "Secure LLM Gateway"
 APP_VERSION = "1.0.0"
 
 DEFAULT_PROMPT_THRESHOLD = float(os.getenv("PROMPT_INJECTION_THRESHOLD", "0.70"))
