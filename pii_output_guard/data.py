@@ -5,7 +5,7 @@ import pandas as pd
 from dotenv import load_dotenv
 from datasets import load_dataset
 
-from config import DATASET_NAME
+from pii_output_guard.config import DATASET_NAME
 
 load_dotenv()
 

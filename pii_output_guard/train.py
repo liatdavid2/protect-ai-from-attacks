@@ -8,12 +8,12 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 if CURRENT_DIR not in sys.path:
     sys.path.append(CURRENT_DIR)
 
-from config import DATASET_NAME, EMBEDDING_MODEL_NAME
-from data import load_splits, build_label_map
-from embedding_cache import get_cache_path, load_embeddings_cache, save_embeddings_cache
-from features import EmbeddingEncoder
-from model import build_model, save_model
-from run_paths import create_run_dir
+from pii_output_guard.config import DATASET_NAME, EMBEDDING_MODEL_NAME
+from pii_output_guard.data import load_splits, build_label_map
+from pii_output_guard.embedding_cache import get_cache_path, load_embeddings_cache, save_embeddings_cache
+from pii_output_guard.features import EmbeddingEncoder
+from pii_output_guard.model import build_model, save_model
+from pii_output_guard.run_paths import create_run_dir
 
 
 def main():

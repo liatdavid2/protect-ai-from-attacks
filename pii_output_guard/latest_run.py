@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from run_paths import RUNS_DIR
+from pii_output_guard.run_paths import RUNS_DIR
 
 
 def get_latest_run_dir() -> Path:
