@@ -1,7 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 
-from config import ARTIFACTS_DIR
+from system_prompt_leakage_output_guard.config import ARTIFACTS_DIR
 
 CACHE_DIR = ARTIFACTS_DIR / "cache"
 RUNS_DIR = ARTIFACTS_DIR / "runs"

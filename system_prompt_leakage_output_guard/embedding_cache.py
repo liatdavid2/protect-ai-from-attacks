@@ -3,8 +3,8 @@ from typing import Tuple
 
 import numpy as np
 
-from config import EMBEDDING_MODEL_NAME
-from run_paths import CACHE_DIR
+from system_prompt_leakage_output_guard.config import EMBEDDING_MODEL_NAME
+from system_prompt_leakage_output_guard.run_paths import CACHE_DIR
 
 
 def _safe_name(value: str) -> str:
