@@ -5,7 +5,7 @@ import pandas as pd
 from datasets import load_dataset
 from dotenv import load_dotenv
 
-from prompt_injection.config import DATASET_NAME, DATASET_CONFIG
+from prompt_injection_input_guard.config import DATASET_NAME, DATASET_CONFIG
 
 load_dotenv()
 

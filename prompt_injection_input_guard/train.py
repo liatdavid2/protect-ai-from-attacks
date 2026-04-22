@@ -8,12 +8,12 @@ PROJECT_ROOT = os.path.dirname(CURRENT_DIR)
 if PROJECT_ROOT not in sys.path:
     sys.path.append(PROJECT_ROOT)
 
-from prompt_injection.config import DATASET_NAME, DATASET_CONFIG, EMBEDDING_MODEL_NAME
-from prompt_injection.data import build_label_map, load_splits
-from prompt_injection.embedding_cache import get_cache_path, load_embeddings_cache, save_embeddings_cache
-from prompt_injection.features import EmbeddingEncoder
-from prompt_injection.model import build_model, evaluate_model, save_model
-from prompt_injection.run_paths import create_run_dir
+from prompt_injection_input_guard.config import DATASET_NAME, DATASET_CONFIG, EMBEDDING_MODEL_NAME
+from prompt_injection_input_guard.data import build_label_map, load_splits
+from prompt_injection_input_guard.embedding_cache import get_cache_path, load_embeddings_cache, save_embeddings_cache
+from prompt_injection_input_guard.features import EmbeddingEncoder
+from prompt_injection_input_guard.model import build_model, evaluate_model, save_model
+from prompt_injection_input_guard.run_paths import create_run_dir
 
 
 def main():

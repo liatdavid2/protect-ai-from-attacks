@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from prompt_injection.run_paths import RUNS_DIR
+from prompt_injection_input_guard.run_paths import RUNS_DIR
 
 
 def get_latest_run_dir() -> Path:
