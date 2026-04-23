@@ -15,6 +15,7 @@ The API exposes a single `/chat` endpoint and measures latency for every stage.
 ### API Demo (Swagger UI)
 
 This demo shows how the system protects an LLM using several guard models before and after the model response, with one `/chat` API endpoint in Swagger UI.
+
 [![Watch](docs/images/video.png)](https://youtu.be/s13LaIX6ScE)
 
 ## What this project does
