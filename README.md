@@ -36,6 +36,63 @@ This architecture is practical for secured inference because it separates risks 
 - **Disabled steps** make testing and ablation simple
 - **Independent guard modules** make retraining and replacement easy
 
+Architecture Diagram - Online Agents Flow
+```
++-------------------+
+|   User Request    |
++-------------------+
+          |
+          v
++-------------------+
+|     API Agent     |
++-------------------+
+          |
+          v
++-------------------------------------------+
+| Prompt Injection Guard Agent              |
+| model trained from scratch on             |
+| neuralchemy/Prompt-injection-dataset      |
++-------------------------------------------+
+          |
+          v
++--------------------------------------------+
+| Harmful Content Guard Agent                |
+| model trained from scratch on              |
+| nvidia/Aegis-AI-Content-Safety-Dataset-2.0 |
++--------------------------------------------+
+          |
+          v
++-------------------------------+
+|     LLM Inference Agent       |
++-------------------------------+
+          |
+          v
++-------------------------------------------+
+| PII Output Guard Agent                    |
+| model trained from scratch on             |
+| ai4privacy/pii-masking-300k dataset       |
++-------------------------------------------+
+          |
+          v
++-------------------------------------------+
+| System Prompt Leakage Output Guard Agent  |
+| model trained from scratch on             |
+| gabrielchua/system-prompt-leakage dataset |
++-------------------------------------------+
+          |
+     +----+----+
+     |         |
+     v         v
++-------------------+   +-------------------+
+|   Block Agent     |   | Response Builder  |
++-------------------+   +-------------------+
+                                  |
+                                  v
+                        +-------------------+
+                        |  Return Response  |
+                        +-------------------+
+```
+
 Main idea:
 
 `User Prompt -> Input Guards -> Model -> Output Guards -> Final Response`
