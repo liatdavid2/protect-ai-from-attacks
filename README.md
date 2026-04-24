@@ -139,7 +139,7 @@ In this setup:
 - the gateway can be scaled from 1 replica to 2 replicas and then to 3 replicas
 
 ### Architecture Diagram - AWS EKS
-
+```
 +--------------------------+
 |        End User          |
 +--------------------------+
@@ -169,10 +169,11 @@ In this setup:
 |  +--------------------------------------------+  |
 |                      |                           |
 |                      v                           |
-|             +------------------+                |
-|             | ollama pod       |                |
-|             +------------------+                |
+|             +------------------+                 |
+|             | ollama pod       |                 |
+|             +------------------+                 |
 +--------------------------------------------------+
+```
 
 ### Scaling Example - 2 Replicas
 ```
