@@ -365,3 +365,21 @@ Then open:
 ```text
 http://127.0.0.1:62627/docs
 ```
+
+### S3 Artifact Storage
+
+After training, only the latest deployable artifacts are uploaded to S3 to keep storage costs low.
+
+Uploaded:
+- latest `.joblib` model
+- `metrics.json`
+- `label_map.json`
+- `training_manifest.json`
+
+Not uploaded:
+- old runs
+- cache folders
+- temporary files
+
+MLflow keeps the full experiment history, while S3 stores only the latest models needed for deployment.
+
