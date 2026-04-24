@@ -1,0 +1,47 @@
+{
+  "dataset_name": "ai4privacy/pii-masking-300k",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "cache_path": "C:\\Users\\liat\\Documents\\work\\secure-slm-gateway\\artifacts\\pii_output_guard\\cache\\embeddings_sentence_transformers_all_MiniLM_L6_v2.npz",
+  "validation": {
+    "accuracy": 0.887,
+    "f1_macro": 0.8868097271513414,
+    "f1_binary": 0.8821689259645464,
+    "classification_report": {
+      "0": {
+        "precision": 0.8576709796672828,
+        "recall": 0.928,
+        "f1-score": 0.8914505283381364,
+        "support": 2500.0
+      },
+      "1": {
+        "precision": 0.9215686274509803,
+        "recall": 0.846,
+        "f1-score": 0.8821689259645464,
+        "support": 2500.0
+      },
+      "accuracy": 0.887,
+      "macro avg": {
+        "precision": 0.8896198035591316,
+        "recall": 0.887,
+        "f1-score": 0.8868097271513414,
+        "support": 5000.0
+      },
+      "weighted avg": {
+        "precision": 0.8896198035591315,
+        "recall": 0.887,
+        "f1-score": 0.8868097271513414,
+        "support": 5000.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        2320,
+        180
+      ],
+      [
+        385,
+        2115
+      ]
+    ]
+  }
+}

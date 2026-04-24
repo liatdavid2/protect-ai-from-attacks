@@ -6,6 +6,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
+import shutil
 
 import mlflow
 import boto3
@@ -13,6 +14,7 @@ from dotenv import load_dotenv
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
+EXPORT_DIR = PROJECT_ROOT / "artifacts_latest_export"
 load_dotenv(PROJECT_ROOT / ".env")
 
 GUARD_TRAINING_MODULES = [
@@ -21,6 +23,59 @@ GUARD_TRAINING_MODULES = [
     "pii_output_guard.train",
     "system_prompt_leakage_output_guard.train",
 ]
+
+def find_latest_run_dir_for_guard(module_name: str) -> Optional[Path]:
+    guard_dir = get_guard_artifact_dir(module_name)
+    runs_dir = guard_dir / "runs"
+
+    if not runs_dir.exists():
+        print(f"No runs directory found for {module_name}: {runs_dir}", flush=True)
+        return None
+
+    run_dirs = [p for p in runs_dir.iterdir() if p.is_dir()]
+
+    if not run_dirs:
+        print(f"No run folders found for {module_name}: {runs_dir}", flush=True)
+        return None
+
+    return max(run_dirs, key=lambda p: p.stat().st_mtime)
+
+
+def prepare_latest_artifacts_export(manifest_path: Path) -> Path:
+    if EXPORT_DIR.exists():
+        shutil.rmtree(EXPORT_DIR)
+
+    EXPORT_DIR.mkdir(parents=True, exist_ok=True)
+
+    shutil.copy2(manifest_path, EXPORT_DIR / "training_manifest.json")
+
+    for module_name in GUARD_TRAINING_MODULES:
+        guard_name = module_name.replace(".train", "")
+        latest_run_dir = find_latest_run_dir_for_guard(module_name)
+
+        if latest_run_dir is None:
+            continue
+
+        target_dir = EXPORT_DIR / guard_name / "latest"
+        target_dir.parent.mkdir(parents=True, exist_ok=True)
+
+        shutil.copytree(
+            latest_run_dir,
+            target_dir,
+            ignore=shutil.ignore_patterns(
+                "cache",
+                "__pycache__",
+                "*.tmp",
+                "*.log",
+            ),
+        )
+
+        print(
+            f"Prepared latest artifact for {guard_name}: {latest_run_dir}",
+            flush=True,
+        )
+
+    return EXPORT_DIR
 
 
 def get_guard_artifact_dir(module_name: str) -> Path:
@@ -209,9 +264,9 @@ def main() -> None:
 
         manifest_path = write_manifest(run_name, results)
 
-        if ARTIFACTS_DIR.exists():
-            mlflow.log_artifacts(str(ARTIFACTS_DIR), artifact_path="artifacts")
+        latest_export_dir = prepare_latest_artifacts_export(manifest_path)
 
+        mlflow.log_artifacts(str(latest_export_dir), artifact_path="latest_artifacts")
         mlflow.log_artifact(str(manifest_path), artifact_path="manifest")
 
         s3_bucket = os.getenv("S3_BUCKET")
@@ -222,7 +277,7 @@ def main() -> None:
 
         if s3_bucket:
             print(f"Uploading artifacts to s3://{s3_bucket}/{s3_prefix}", flush=True)
-            upload_directory_to_s3(ARTIFACTS_DIR, s3_bucket, s3_prefix)
+            upload_directory_to_s3(latest_export_dir, s3_bucket, s3_prefix)
             mlflow.log_param("s3_bucket", s3_bucket)
             mlflow.log_param("s3_prefix", s3_prefix)
         else:
