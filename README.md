@@ -291,3 +291,73 @@ All guard models were trained from scratch on real datasets using `sentence-tran
 - **PII Output Guard**: strong validation results, with **88.70% validation accuracy** and **0.8822 validation F1-binary**.
 - **System Prompt Leakage Output Guard**: strong results, with **94.48% test accuracy** and **0.9533 test F1-binary**.
 
+## Kubernetes / Minikube Commands
+
+```cmd
+Open Docker Desktop
+
+minikube start
+kubectl get nodes
+````
+
+Add `.dockerignore` before building the image.
+
+```cmd
+minikube image build -t secure-llm-gateway:latest .
+```
+
+```cmd
+kubectl exec -it deployment/ollama -- ollama pull qwen2.5:0.5b
+kubectl exec -it deployment/ollama -- ollama list
+```
+
+Delete old malware training pods:
+
+```cmd
+for /f "tokens=1" %i in ('kubectl get pods --no-headers ^| findstr "^malware-training-job"') do kubectl delete pod %i
+```
+
+Restart Kubernetes resources:
+
+```cmd
+kubectl delete -f k8s/ollama-deployment.yaml
+kubectl delete -f k8s/inference-deployment.yaml
+
+kubectl apply -f k8s/ollama-deployment.yaml
+kubectl apply -f k8s/inference-deployment.yaml
+```
+
+Open the service:
+
+```cmd
+minikube service secure-llm-gateway
+```
+
+Check status and logs:
+
+```cmd
+kubectl get pods
+kubectl logs -f deployment/ollama
+```
+
+Scale the API to 4 replicas:
+
+```cmd
+kubectl scale deployment secure-llm-gateway --replicas=4
+kubectl get pods
+kubectl get svc
+```
+
+Forward the service to local Swagger UI:
+
+```cmd
+kubectl port-forward svc/secure-llm-gateway 62627:80
+```
+
+Then open:
+
+```text
+http://127.0.0.1:62627/docs
+```
+
+```
