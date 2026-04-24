@@ -18,6 +18,24 @@ This demo shows how the system protects an LLM using several guard models before
 
 [![Watch](images/video.png)](https://youtu.be/s13LaIX6ScE)
 
+### Kubernetes Demo (Minikube)
+
+This demo shows the `secure-llm-gateway` API running on a local Kubernetes cluster with Minikube.
+
+The API is deployed with **4 replicas**, demonstrating horizontal scaling and high availability at the application layer.  
+Instead of exposing each pod separately, Kubernetes provides a single Service endpoint that load-balances traffic across the available API replicas.
+
+The demo highlights:
+
+- Deployment of the LLM Gateway on Kubernetes
+- 4 running API replicas
+- Service-based routing to the API pods
+- Swagger UI access through port forwarding
+- Input and output guard models protecting the `/chat` endpoint
+- Local Kubernetes workflow using Minikube
+
+[![Watch](images/k8s-video.png)](https://youtu.be/wL5SNM9fvEA)
+
 ## What this project does
 
 This project adds security layers around a model served through Ollama.
