@@ -1,0 +1,89 @@
+{
+  "dataset_name": "nvidia/Aegis-AI-Content-Safety-Dataset-2.0",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "cache_path": "C:\\Users\\liat\\Documents\\work\\secure-slm-gateway\\artifacts\\harmful_content_input_guard\\cache\\embeddings_sentence-transformers_all-MiniLM-L6-v2.npz",
+  "validation": {
+    "accuracy": 0.8304498269896193,
+    "f1_macro": 0.8229185267661754,
+    "f1_binary": 0.8594377510040161,
+    "classification_report": {
+      "0": {
+        "precision": 0.7843478260869565,
+        "recall": 0.7884615384615384,
+        "f1-score": 0.7863993025283348,
+        "support": 572.0
+      },
+      "1": {
+        "precision": 0.860919540229885,
+        "recall": 0.8579610538373424,
+        "f1-score": 0.8594377510040161,
+        "support": 873.0
+      },
+      "accuracy": 0.8304498269896193,
+      "macro avg": {
+        "precision": 0.8226336831584208,
+        "recall": 0.8232112961494404,
+        "f1-score": 0.8229185267661754,
+        "support": 1445.0
+      },
+      "weighted avg": {
+        "precision": 0.8306087994065252,
+        "recall": 0.8304498269896193,
+        "f1-score": 0.8305256454482446,
+        "support": 1445.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        451,
+        121
+      ],
+      [
+        124,
+        749
+      ]
+    ]
+  },
+  "test": {
+    "accuracy": 0.8034623217922607,
+    "f1_macro": 0.8002253612578911,
+    "f1_binary": 0.8256549232158988,
+    "classification_report": {
+      "0": {
+        "precision": 0.8207663782447466,
+        "recall": 0.7337016574585635,
+        "f1-score": 0.7747957992998833,
+        "support": 905.0
+      },
+      "1": {
+        "precision": 0.7913419913419913,
+        "recall": 0.8630783758262511,
+        "f1-score": 0.8256549232158988,
+        "support": 1059.0
+      },
+      "accuracy": 0.8034623217922607,
+      "macro avg": {
+        "precision": 0.806054184793369,
+        "recall": 0.7983900166424074,
+        "f1-score": 0.8002253612578911,
+        "support": 1964.0
+      },
+      "weighted avg": {
+        "precision": 0.8049005810298699,
+        "recall": 0.8034623217922607,
+        "f1-score": 0.8022193289470628,
+        "support": 1964.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        664,
+        241
+      ],
+      [
+        145,
+        914
+      ]
+    ]
+  }
+}

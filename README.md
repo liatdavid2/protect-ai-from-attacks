@@ -67,7 +67,7 @@ This architecture is practical for secured inference because it separates risks 
 - **Disabled steps** make testing and ablation simple
 - **Independent guard modules** make retraining and replacement easy
 
-### Architecture Diagram - Online Agents Flow
+Architecture Diagram - Online Agents Flow
 ```
 +-------------------+
 |   User Request    |
@@ -127,96 +127,6 @@ This architecture is practical for secured inference because it separates risks 
 Main idea:
 
 `User Prompt -> Input Guards -> Model -> Output Guards -> Final Response`
-
-Architecture Diagram - AWS EKS Deployment and Scaling
-
-The same secure LLM gateway can run on AWS EKS.
-
-In this setup:
-- the `secure-llm-gateway` API runs as a Kubernetes Deployment
-- the API is exposed through a `LoadBalancer` Service
-- `ollama` runs inside the cluster as an internal Service
-- the gateway can be scaled from 1 replica to 2 replicas and then to 3 replicas
-
-### Architecture Diagram - AWS EKS
-```
-+--------------------------+
-|        End User          |
-+--------------------------+
-             |
-             v
-+--------------------------+
-| AWS LoadBalancer Service |
-| secure-llm-gateway       |
-+--------------------------+
-             |
-             v
-+--------------------------------------------------+
-|                Amazon EKS Cluster                |
-|                                                  |
-|  +--------------------------------------------+  |
-|  | secure-llm-gateway Deployment              |  |
-|  | API + guards + latency tracking            |  |
-|  +--------------------------------------------+  |
-|         |                    |                   |
-|         v                    v                   |
-|  +------------------+  +------------------+      |
-|  | gateway pod #1   |  | gateway pod #2   |      |
-|  +------------------+  +------------------+      |
-|                                                  |
-|  +--------------------------------------------+  |
-|  | ollama Service (ClusterIP)                 |  |
-|  +--------------------------------------------+  |
-|                      |                           |
-|                      v                           |
-|             +------------------+                |
-|             | ollama pod       |                |
-|             +------------------+                |
-+--------------------------------------------------+
-
-### Scaling Example - 2 Replicas
-
-+--------------------------+
-| AWS LoadBalancer Service |
-+--------------------------+
-             |
-             v
-+-----------------------------------------------+
-| secure-llm-gateway Deployment (replicas = 2)  |
-+-----------------------------------------------+
-         |                         |
-         v                         v
-+------------------+      +------------------+
-| gateway pod #1   |      | gateway pod #2   |
-+------------------+      +------------------+
-
-### Scaling Example - 3 Replicas
-
-+--------------------------+
-| AWS LoadBalancer Service |
-+--------------------------+
-             |
-             v
-+-----------------------------------------------+
-| secure-llm-gateway Deployment (replicas = 3)  |
-+-----------------------------------------------+
-         |                 |                 |
-         v                 v                 v
-+------------------+ +------------------+ +------------------+
-| gateway pod #1   | | gateway pod #2   | | gateway pod #3   |
-+------------------+ +------------------+ +------------------+
-```
-
-### Scaling Commands
-
-Scale to 2 replicas:
-
-```
-kubectl scale deployment secure-llm-gateway --replicas=2
-kubectl get deployments
-kubectl get pods -o wide
-kubectl get endpoints secure-llm-gateway
-```
 
 ## Guards
 
@@ -456,129 +366,69 @@ Then open:
 http://127.0.0.1:62627/docs
 ```
 
-## AWS EKS Demo Commands
+### S3 Artifact Storage
 
-The project was deployed to AWS EKS for a short live demo and then deleted to avoid unnecessary cloud costs.
+After training, only the latest deployable artifacts are uploaded to S3 to keep storage costs low.
 
-### Verify Kubernetes context
+Uploaded:
+- latest `.joblib` model
+- `metrics.json`
+- `label_map.json`
+- `training_manifest.json`
 
-```bash
-kubectl config current-context
+Not uploaded:
+- old runs
+- cache folders
+- temporary files
+
+MLflow keeps the full experiment history, while S3 stores only the latest models needed for deployment.
+
+### MLflow Demo
+
+The training pipeline logs guard model experiments to MLflow, including metrics, classification reports, F1 scores, and run comparisons.
+
+![MLflow Guard Training](images/mlflow_guard_training.png)
+
+### AWS ECS Fargate Training
+
+The guard models can be trained in AWS using an ECS Fargate one-time task.
+
+The training flow:
+
+```text
+Docker image -> ECR -> ECS Fargate task -> train guard models -> upload artifacts to S3 -> exit
 ````
 
-Expected context format:
+Each Fargate run starts from a clean container, loads the latest datasets, rebuilds embeddings, trains all guard models, uploads the latest model artifacts to S3, and then stops automatically.
+
+This avoids maintaining a persistent training server and demonstrates a reproducible cloud-based ML training workflow.
+
+Main files:
 
 ```text
-arn:aws:eks:<region>:<aws-account-id>:cluster/secure-llm-demo
+aws_fargate_training/run_fargate_training.cmd
+aws_fargate_training/ecs-task-def.json
+aws_fargate_training/s3-guard-trainer-policy.json
+Dockerfile.train_guards
+train_all_guards.py
 ```
 
-### Show EKS worker nodes
+Run:
 
-```bash
-kubectl get nodes -o wide
+```cmd
+aws_fargate_training\run_fargate_training.cmd
 ```
 
-### Show deployments
+Check logs:
 
-```bash
-kubectl get deployments
+```cmd
+aws logs tail /ecs/secure-llm-guard-trainer --region us-east-1 --follow
 ```
 
-### Show running pods
+Check S3 artifacts:
 
-```bash
-kubectl get pods -o wide
+```cmd
+aws s3 ls s3://secure-llm-gateway-models/secure-llm-gateway/guard-training/local-demo/ --recursive
 ```
 
-### Show Kubernetes services
 
-```bash
-kubectl get svc
-```
-
-### Show the secure LLM gateway service
-
-```bash
-kubectl get svc secure-llm-gateway
-```
-
-The gateway is exposed through an AWS Load Balancer:
-
-```text
-http://<aws-load-balancer-url>/docs
-```
-
-### Show backend endpoints behind the gateway service
-
-```bash
-kubectl get endpoints secure-llm-gateway
-```
-
-### Show Ollama pod status
-
-```bash
-kubectl get pods -l app=ollama
-```
-
-### Show available Ollama models
-
-```bash
-kubectl exec -it deployment/ollama -- ollama list
-```
-
-### Scale the secure LLM gateway to 3 replicas
-
-```bash
-kubectl scale deployment secure-llm-gateway --replicas=3
-kubectl get deployments
-kubectl get pods -o wide
-kubectl get endpoints secure-llm-gateway
-```
-
-### Scale the secure LLM gateway back to 2 replicas
-
-```bash
-kubectl scale deployment secure-llm-gateway --replicas=2
-kubectl get deployments
-kubectl get pods -o wide
-kubectl get endpoints secure-llm-gateway
-```
-
-### Open the API documentation
-
-```text
-http://<aws-load-balancer-url>/docs
-```
-
-### Delete the EKS cluster after the demo
-
-```bash
-eksctl delete cluster --name secure-llm-demo --region <region>
-```
-
-### Verify cleanup
-
-```bash
-aws eks list-clusters --region <region>
-
-aws ec2 describe-instances --region <region> --filters "Name=instance-state-name,Values=running"
-
-aws elbv2 describe-load-balancers --region <region>
-
-aws ecr describe-repositories --region <region>
-
-aws cloudformation list-stacks --region <region> --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE DELETE_FAILED DELETE_IN_PROGRESS
-
-aws ec2 describe-volumes --region <region> --filters "Name=status,Values=available"
-```
-
-Expected cleanup result:
-
-```text
-EKS clusters: []
-Running EC2 instances: []
-Load balancers: []
-ECR repositories: []
-No active CloudFormation stacks for the demo
-No available EBS volumes left from the demo
-```
