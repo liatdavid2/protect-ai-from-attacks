@@ -128,7 +128,7 @@ Main idea:
 
 `User Prompt -> Input Guards -> Model -> Output Guards -> Final Response`
 
-## AWS EKS Deployment and Scaling
+Architecture Diagram - AWS EKS Deployment and Scaling
 
 The same secure LLM gateway can run on AWS EKS.
 
