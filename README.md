@@ -97,7 +97,14 @@ Using both regex and a trained model provides better coverage than using only on
 ### 4. System Prompt Leakage Output Guard
 Checks whether the model output contains leaked internal instructions, hidden policies, system prompt fragments, or other protected internal content.
 
-This is the final output protection layer.
+
+## Datasets
+
+Each guard is trained on a real dataset, not synthetic placeholder data.
+- `harmful_content_input_guard` -> `nvidia/Aegis-AI-Content-Safety-Dataset-2.0`: content safety dataset for harmful or unsafe prompts; input: `text/prompt`, output: `label`.
+- `pii_output_guard` -> `ai4privacy/pii-masking-300k`: PII detection dataset for personal or sensitive information in text; input: `source_text/text`, output: `masked_text` or entity annotations, converted to binary `label` in training.
+- `prompt_injection_input_guard` -> `neuralchemy/Prompt-injection-dataset`: prompt injection and jailbreak detection dataset; input: `text/prompt`, output: `label`.
+- `system_prompt_leakage_output_guard` -> `gabrielchua/system-prompt-leakage`: system prompt leakage detection dataset for hidden instructions or internal policy exposure; input: `text`, output: `label`.
 
 
 ## Architecture
@@ -270,14 +277,6 @@ python prompt_injection_input_guard\train.py
 python pii_output_guard\train.py
 python system_prompt_leakage_output_guard\train.py
 ```
-
-## Datasets
-
-Each guard is trained on a real dataset, not synthetic placeholder data.
-- `harmful_content_input_guard` -> `nvidia/Aegis-AI-Content-Safety-Dataset-2.0`: content safety dataset for harmful or unsafe prompts; input: `text/prompt`, output: `label`.
-- `pii_output_guard` -> `ai4privacy/pii-masking-300k`: PII detection dataset for personal or sensitive information in text; input: `source_text/text`, output: `masked_text` or entity annotations, converted to binary `label` in training.
-- `prompt_injection_input_guard` -> `neuralchemy/Prompt-injection-dataset`: prompt injection and jailbreak detection dataset; input: `text/prompt`, output: `label`.
-- `system_prompt_leakage_output_guard` -> `gabrielchua/system-prompt-leakage`: system prompt leakage detection dataset for hidden instructions or internal policy exposure; input: `text`, output: `label`.
 
 
 ## Swagger Test Examples
