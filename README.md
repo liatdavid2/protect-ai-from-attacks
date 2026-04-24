@@ -11,6 +11,14 @@ The system protects an RAG/LLM-style API with multiple guards before and after m
 
 The API exposes a single `/chat` endpoint and measures latency for every stage.
 
+## Datasets
+
+Each guard is trained on a real dataset, not synthetic placeholder data.
+- `harmful_content_input_guard` -> `nvidia/Aegis-AI-Content-Safety-Dataset-2.0`: content safety dataset for harmful or unsafe prompts; input: `text/prompt`, output: `label`.
+- `pii_output_guard` -> `ai4privacy/pii-masking-300k`: PII detection dataset for personal or sensitive information in text; input: `source_text/text`, output: `masked_text` or entity annotations, converted to binary `label` in training.
+- `prompt_injection_input_guard` -> `neuralchemy/Prompt-injection-dataset`: prompt injection and jailbreak detection dataset; input: `text/prompt`, output: `label`.
+- `system_prompt_leakage_output_guard` -> `gabrielchua/system-prompt-leakage`: system prompt leakage detection dataset for hidden instructions or internal policy exposure; input: `text`, output: `label`.
+
 ## System Demo
 ### API Demo (Swagger UI)
 
@@ -41,70 +49,6 @@ The demo highlights:
 This demo shows how the `secure-llm-gateway` API scales horizontally on Kubernetes, from 2 replicas to 3 replicas, and then back to 2 replicas.
 
 [![Watch](images/AWS_EKS.png)](https://youtu.be/hURJjyjlP2E)
-
-## What this project does
-
-This project adds security layers around a model served through Ollama.
-
-Flow:
-
-1. Check the user prompt with the Prompt Injection guard
-2. Check the user prompt with the Harmful Content guard
-3. Run the model
-4. Check the generated output with the PII Output guard
-5. Check the generated output with the System Prompt Leakage Output guard
-6. Return the response only if all enabled stages pass
-
-Each stage can be disabled dynamically through `disabled_steps`, and latency is reported for every step.
-
-## Guards
-
-### 1. Prompt Injection Input Guard
-Detects malicious prompts such as:
-- instruction override attempts
-- attempts to ignore previous rules
-- attempts to extract hidden instructions
-- attempts to bypass policy or reveal internal behavior
-
-### 2. Harmful Content Input Guard
-Detects unsafe or malicious user requests such as:
-- violent wrongdoing
-- illegal harmful instructions
-- clearly dangerous requests
-
-### 3. PII Output Guard
-Checks generated model output for personal or sensitive information leakage.
-
-This guard uses two complementary ideas:
-
-#### Regex-based detection
-Useful for structured patterns such as:
-- email addresses
-- phone numbers
-- ID-like values
-- credit-card-like patterns
-
-Regex is fast and precise for known formats.
-
-#### Model-based detection
-Useful for contextual or flexible cases such as:
-- partial personal details
-- natural language descriptions of private information
-- cases that do not follow a strict format
-
-Using both regex and a trained model provides better coverage than using only one of them.
-
-### 4. System Prompt Leakage Output Guard
-Checks whether the model output contains leaked internal instructions, hidden policies, system prompt fragments, or other protected internal content.
-
-
-## Datasets
-
-Each guard is trained on a real dataset, not synthetic placeholder data.
-- `harmful_content_input_guard` -> `nvidia/Aegis-AI-Content-Safety-Dataset-2.0`: content safety dataset for harmful or unsafe prompts; input: `text/prompt`, output: `label`.
-- `pii_output_guard` -> `ai4privacy/pii-masking-300k`: PII detection dataset for personal or sensitive information in text; input: `source_text/text`, output: `masked_text` or entity annotations, converted to binary `label` in training.
-- `prompt_injection_input_guard` -> `neuralchemy/Prompt-injection-dataset`: prompt injection and jailbreak detection dataset; input: `text/prompt`, output: `label`.
-- `system_prompt_leakage_output_guard` -> `gabrielchua/system-prompt-leakage`: system prompt leakage detection dataset for hidden instructions or internal policy exposure; input: `text`, output: `label`.
 
 
 ## Architecture
