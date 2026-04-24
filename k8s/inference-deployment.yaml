@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: secure-llm-gateway
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: secure-llm-gateway
@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: api
-          image: secure-llm-gateway:latest
-          imagePullPolicy: Never
+          image: 127393435473.dkr.ecr.us-east-1.amazonaws.com/secure-llm-gateway:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
           env:
