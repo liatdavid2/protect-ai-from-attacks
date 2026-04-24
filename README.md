@@ -383,6 +383,12 @@ Not uploaded:
 
 MLflow keeps the full experiment history, while S3 stores only the latest models needed for deployment.
 
+### MLflow Demo
+
+The training pipeline logs guard model experiments to MLflow, including metrics, classification reports, F1 scores, and run comparisons.
+
+![MLflow Guard Training](images/mlflow_guard_training.png)
+
 ### AWS ECS Fargate Training
 
 The guard models can be trained in AWS using an ECS Fargate one-time task.
