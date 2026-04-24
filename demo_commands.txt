@@ -1,0 +1,70 @@
+# Demo Commands AWS EKS
+
+# Show the current Kubernetes context.
+kubectl config current-context
+
+# Show the AWS EKS worker nodes.
+kubectl get nodes -o wide
+
+# Show the Kubernetes deployments.
+kubectl get deployments
+
+# Show all running pods and the nodes they are running on.
+kubectl get pods -o wide
+
+# Show all Kubernetes services.
+kubectl get svc
+
+# Show the secure LLM gateway service and its AWS Load Balancer URL.
+kubectl get svc secure-llm-gateway
+
+# Show the backend endpoints behind the secure LLM gateway service.
+kubectl get endpoints secure-llm-gateway
+
+# Show the Ollama pod status.
+kubectl get pods -l app=ollama
+
+# Show the models available inside Ollama.
+kubectl exec -it deployment/ollama -- ollama list
+
+# Scale the secure LLM gateway to 3 replicas.
+kubectl scale deployment secure-llm-gateway --replicas=3
+
+# Verify that the deployment now has 3 replicas.
+kubectl get deployments
+
+# Show the 3 gateway pods.
+kubectl get pods -o wide
+
+# Show that the service now has 3 backend endpoints.
+kubectl get endpoints secure-llm-gateway
+
+# Scale the secure LLM gateway back to 2 replicas.
+kubectl scale deployment secure-llm-gateway --replicas=2
+
+# Verify that the deployment is back to 2 replicas.
+kubectl get deployments
+
+# Show the 2 gateway pods.
+kubectl get pods -o wide
+
+# Show that the service now has 2 backend endpoints.
+kubectl get endpoints secure-llm-gateway
+
+# Show the external AWS Load Balancer URL again.
+kubectl get svc secure-llm-gateway
+
+# Open this URL in the browser:
+# http://ac9a7820af32b4246a8cca7f66174ece-2097321036.us-east-1.elb.amazonaws.com/docs
+
+# After the demo recording, delete the EKS cluster to avoid unnecessary AWS costs.
+eksctl delete cluster --name secure-llm-demo --region us-east-1
+
+# Verify that the EKS cluster was deleted.
+aws eks list-clusters --region us-east-1
+
+# Verify that there are no running EC2 instances left.
+aws ec2 describe-instances --region us-east-1 --filters "Name=instance-state-name,Values=running"
+
+# Verify that there are no Load Balancers left.
+aws elbv2 describe-load-balancers --region us-east-1
