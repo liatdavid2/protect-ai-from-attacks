@@ -9,10 +9,11 @@ from typing import Optional
 
 import mlflow
 import boto3
-
+from dotenv import load_dotenv
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
+load_dotenv(PROJECT_ROOT / ".env")
 
 GUARD_TRAINING_MODULES = [
     "prompt_injection_input_guard.train",
