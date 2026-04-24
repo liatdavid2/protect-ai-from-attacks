@@ -57,6 +57,49 @@ Flow:
 
 Each stage can be disabled dynamically through `disabled_steps`, and latency is reported for every step.
 
+## Guards
+
+### 1. Prompt Injection Input Guard
+Detects malicious prompts such as:
+- instruction override attempts
+- attempts to ignore previous rules
+- attempts to extract hidden instructions
+- attempts to bypass policy or reveal internal behavior
+
+### 2. Harmful Content Input Guard
+Detects unsafe or malicious user requests such as:
+- violent wrongdoing
+- illegal harmful instructions
+- clearly dangerous requests
+
+### 3. PII Output Guard
+Checks generated model output for personal or sensitive information leakage.
+
+This guard uses two complementary ideas:
+
+#### Regex-based detection
+Useful for structured patterns such as:
+- email addresses
+- phone numbers
+- ID-like values
+- credit-card-like patterns
+
+Regex is fast and precise for known formats.
+
+#### Model-based detection
+Useful for contextual or flexible cases such as:
+- partial personal details
+- natural language descriptions of private information
+- cases that do not follow a strict format
+
+Using both regex and a trained model provides better coverage than using only one of them.
+
+### 4. System Prompt Leakage Output Guard
+Checks whether the model output contains leaked internal instructions, hidden policies, system prompt fragments, or other protected internal content.
+
+This is the final output protection layer.
+
+
 ## Architecture
 
 This architecture is practical for secured inference because it separates risks by stage:
@@ -219,48 +262,6 @@ kubectl get deployments
 kubectl get pods -o wide
 kubectl get endpoints secure-llm-gateway
 ```
-
-## Guards
-
-### 1. Prompt Injection Input Guard
-Detects malicious prompts such as:
-- instruction override attempts
-- attempts to ignore previous rules
-- attempts to extract hidden instructions
-- attempts to bypass policy or reveal internal behavior
-
-### 2. Harmful Content Input Guard
-Detects unsafe or malicious user requests such as:
-- violent wrongdoing
-- illegal harmful instructions
-- clearly dangerous requests
-
-### 3. PII Output Guard
-Checks generated model output for personal or sensitive information leakage.
-
-This guard uses two complementary ideas:
-
-#### Regex-based detection
-Useful for structured patterns such as:
-- email addresses
-- phone numbers
-- ID-like values
-- credit-card-like patterns
-
-Regex is fast and precise for known formats.
-
-#### Model-based detection
-Useful for contextual or flexible cases such as:
-- partial personal details
-- natural language descriptions of private information
-- cases that do not follow a strict format
-
-Using both regex and a trained model provides better coverage than using only one of them.
-
-### 4. System Prompt Leakage Output Guard
-Checks whether the model output contains leaked internal instructions, hidden policies, system prompt fragments, or other protected internal content.
-
-This is the final output protection layer.
 
 ## Training commands:
 ```
