@@ -67,7 +67,7 @@ This architecture is practical for secured inference because it separates risks 
 - **Disabled steps** make testing and ablation simple
 - **Independent guard modules** make retraining and replacement easy
 
-Architecture Diagram - Online Agents Flow
+### Architecture Diagram - Online Agents Flow
 ```
 +-------------------+
 |   User Request    |
@@ -139,7 +139,7 @@ In this setup:
 - the gateway can be scaled from 1 replica to 2 replicas and then to 3 replicas
 
 ### Architecture Diagram - AWS EKS
-
+```
 +--------------------------+
 |        End User          |
 +--------------------------+
@@ -205,6 +205,7 @@ In this setup:
 +------------------+ +------------------+ +------------------+
 | gateway pod #1   | | gateway pod #2   | | gateway pod #3   |
 +------------------+ +------------------+ +------------------+
+```
 
 ### Scaling Commands
 
