@@ -365,3 +365,130 @@ Then open:
 ```text
 http://127.0.0.1:62627/docs
 ```
+
+## AWS EKS Demo Commands
+
+The project was deployed to AWS EKS for a short live demo and then deleted to avoid unnecessary cloud costs.
+
+### Verify Kubernetes context
+
+```bash
+kubectl config current-context
+````
+
+Expected context format:
+
+```text
+arn:aws:eks:<region>:<aws-account-id>:cluster/secure-llm-demo
+```
+
+### Show EKS worker nodes
+
+```bash
+kubectl get nodes -o wide
+```
+
+### Show deployments
+
+```bash
+kubectl get deployments
+```
+
+### Show running pods
+
+```bash
+kubectl get pods -o wide
+```
+
+### Show Kubernetes services
+
+```bash
+kubectl get svc
+```
+
+### Show the secure LLM gateway service
+
+```bash
+kubectl get svc secure-llm-gateway
+```
+
+The gateway is exposed through an AWS Load Balancer:
+
+```text
+http://<aws-load-balancer-url>/docs
+```
+
+### Show backend endpoints behind the gateway service
+
+```bash
+kubectl get endpoints secure-llm-gateway
+```
+
+### Show Ollama pod status
+
+```bash
+kubectl get pods -l app=ollama
+```
+
+### Show available Ollama models
+
+```bash
+kubectl exec -it deployment/ollama -- ollama list
+```
+
+### Scale the secure LLM gateway to 3 replicas
+
+```bash
+kubectl scale deployment secure-llm-gateway --replicas=3
+kubectl get deployments
+kubectl get pods -o wide
+kubectl get endpoints secure-llm-gateway
+```
+
+### Scale the secure LLM gateway back to 2 replicas
+
+```bash
+kubectl scale deployment secure-llm-gateway --replicas=2
+kubectl get deployments
+kubectl get pods -o wide
+kubectl get endpoints secure-llm-gateway
+```
+
+### Open the API documentation
+
+```text
+http://<aws-load-balancer-url>/docs
+```
+
+### Delete the EKS cluster after the demo
+
+```bash
+eksctl delete cluster --name secure-llm-demo --region <region>
+```
+
+### Verify cleanup
+
+```bash
+aws eks list-clusters --region <region>
+
+aws ec2 describe-instances --region <region> --filters "Name=instance-state-name,Values=running"
+
+aws elbv2 describe-load-balancers --region <region>
+
+aws ecr describe-repositories --region <region>
+
+aws cloudformation list-stacks --region <region> --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE DELETE_FAILED DELETE_IN_PROGRESS
+
+aws ec2 describe-volumes --region <region> --filters "Name=status,Values=available"
+```
+
+Expected cleanup result:
+
+```text
+EKS clusters: []
+Running EC2 instances: []
+Load balancers: []
+ECR repositories: []
+No active CloudFormation stacks for the demo
+No available EBS volumes left from the demo
+```
