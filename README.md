@@ -11,8 +11,6 @@ The system protects an RAG/LLM-style API with multiple guards before and after m
 
 The API exposes a single `/chat` endpoint and measures latency for every stage.
 
-#### *Latency note: Tested locally on a 5-year-old CPU-only laptop with Docker, so latency is expected to improve on production hardware.
-
 ## Datasets
 
 Each guard is trained on a real dataset, not synthetic placeholder data.
@@ -23,15 +21,15 @@ Each guard is trained on a real dataset, not synthetic placeholder data.
 
 ## System Demo
 ### API Demo (Swagger UI)
+#### *Latency note: Tested locally on a 5-year-old CPU-only laptop with Docker, so latency is expected to improve on production hardware.
 
 This demo shows how the system protects an LLM using several guard models before and after the model response, with one `/chat` API endpoint in Swagger UI.
-
 [![Watch](images/video.png)](https://youtu.be/s13LaIX6ScE)
 
 ### Kubernetes Demo (Minikube)
+#### *Latency note: Tested locally on a 5-year-old CPU-only laptop with Docker, so latency is expected to improve on production hardware.
 
 This demo shows the `secure-llm-gateway` API running on a local Kubernetes cluster with Minikube.
-
 The API is deployed with **4 replicas**, demonstrating horizontal scaling and high availability at the application layer.  
 Instead of exposing each pod separately, Kubernetes provides a single Service endpoint that load-balances traffic across the available API replicas.
 
