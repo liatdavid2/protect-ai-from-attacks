@@ -44,7 +44,7 @@ The demo highlights:
 
 [![Watch](images/k8s-video.png)](https://youtu.be/wL5SNM9fvEA)
 
-### Kubernetes Scaling Demo
+### AWS EKS Deployment and Scaling Demo
 
 This demo shows how the `secure-llm-gateway` API scales horizontally on Kubernetes, from 2 replicas to 3 replicas, and then back to 2 replicas.
 
